@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'tourgenai.wsgi.application'
 
 
 DATABASES = { 
-    'default' : dj_database_url.parse("postgresql://phase1_test_db_user:GkKQFFQ0rZ0PvbyHpDv8CnsPn73GfdsL@dpg-cvspot95pdvs73cvc6ig-a.singapore-postgres.render.com/phase1_test_db")
+    'default' : dj_database_url.parse(os.environ.get("DATABASE_URL))
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
