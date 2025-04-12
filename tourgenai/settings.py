@@ -32,7 +32,7 @@ DEBUG = os.getenv("DEBUG",bool(True))
 
 ALLOWED_HOSTS = ["*"]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "https://tourgeniephase1-frontend-jkoq.vercel.app/",
 ]
 
 
