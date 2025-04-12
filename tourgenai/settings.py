@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 from datetime import timedelta
 from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pwfdigr4rm8yr3swlx%j_)pta7y-a^+$doyhh*@h9zyy523eoi'
+SECRET_KEY = os.getenv("SECRET_KEY","qwertyuiopasdfghjklzxcvbnm")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG",bool(True))
 
 ALLOWED_HOSTS = []
 CORS_ALLOWED_ORIGINS = [
@@ -95,18 +97,11 @@ WSGI_APPLICATION = 'tourgenai.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tourgenai_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Unnati@2001',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+
+
+DATABASES = { 
+    'default' : dj_database_url.parse("postgresql://phase1_test_db_user:GkKQFFQ0rZ0PvbyHpDv8CnsPn73GfdsL@dpg-cvspot95pdvs73cvc6ig-a.singapore-postgres.render.com/phase1_test_db")
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -131,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
