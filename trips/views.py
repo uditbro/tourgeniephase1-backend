@@ -138,7 +138,7 @@ def generate_itinerary_openrouter(request):
     try:
         headers = {
             "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
-            "HTTP-Referer": "https://your-site.com",  # replace with your domain or GitHub link
+            "HTTP-Referer": "https://tourgeniephase1-backend.onrender.com",  # replace with your domain or GitHub link
             "Content-Type": "application/json"
         }
 
