@@ -110,10 +110,60 @@ class PlanTripView(APIView):
 
 
 ###Open Router AI logic code.
+# import httpx
+# from django.http import JsonResponse
+# from rest_framework.decorators import api_view
+# from django.conf import settings
+
+# @api_view(['POST'])
+# def generate_itinerary_openrouter(request):
+#     data = request.data
+
+#     source = data.get("source")
+#     destination = data.get("destination")
+#     start_date = data.get("start_date")
+#     end_date = data.get("end_date")
+#     budget = data.get("budget")
+#     currency = data.get("currency", "INR")
+#     travel_type = data.get("travel_type", "dual")
+
+#     if not all([source,destination, start_date, end_date, budget,currency,travel_type]):
+#         return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+#     prompt = f"""
+#     You are a travel assistant AI. Generate a detailed day-by-day itinerary for a {travel_type} People trip from {source} to {destination} 
+#     from {start_date} to {end_date}, with a budget of {budget} {currency}. Include activities, places to visit, and estimated daily cost.
+#     """
+
+#     try:
+#         headers = {
+#             "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+#             "HTTP-Referer": "https://tourgeniephase1-backend.onrender.com",  # replace with your domain or GitHub link
+#             "Content-Type": "application/json"
+#         }
+
+#         body = {
+#             "model": "mistralai/mixtral-8x7b-instruct",  # or gpt-3.5, meta-llama, etc.
+#             "messages": [{"role": "user", "content": prompt}],
+#         }
+
+#         response = httpx.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=body)
+#         response.raise_for_status()
+
+#         content = response.json()
+#         itinerary = content["choices"][0]["message"]["content"]
+
+#         return JsonResponse({"itinerary": itinerary})
+
+#     except Exception as e:
+#         return JsonResponse({'error': str(e)}, status=500)
+
+
 import httpx
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from django.conf import settings
+import traceback
 
 @api_view(['POST'])
 def generate_itinerary_openrouter(request):
@@ -127,7 +177,7 @@ def generate_itinerary_openrouter(request):
     currency = data.get("currency", "INR")
     travel_type = data.get("travel_type", "dual")
 
-    if not all([source,destination, start_date, end_date, budget,currency,travel_type]):
+    if not all([source, destination, start_date, end_date, budget, currency, travel_type]):
         return JsonResponse({'error': 'Missing required fields'}, status=400)
 
     prompt = f"""
@@ -138,22 +188,32 @@ def generate_itinerary_openrouter(request):
     try:
         headers = {
             "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
-            "HTTP-Referer": "https://tourgeniephase1-backend.onrender.com",  # replace with your domain or GitHub link
+            "Referer": "https://tourgeniephase1-backend.onrender.com",
             "Content-Type": "application/json"
         }
 
         body = {
-            "model": "mistralai/mixtral-8x7b-instruct",  # or gpt-3.5, meta-llama, etc.
+            "model": "mistralai/mixtral-8x7b-instruct",
             "messages": [{"role": "user", "content": prompt}],
         }
 
-        response = httpx.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=body)
-        response.raise_for_status()
+        response = httpx.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers=headers,
+            json=body,
+            timeout=30.0
+        )
 
+        print("RESPONSE TEXT:", response.text)
+
+        response.raise_for_status()
         content = response.json()
+
         itinerary = content["choices"][0]["message"]["content"]
 
         return JsonResponse({"itinerary": itinerary})
 
     except Exception as e:
+        traceback.print_exc()
         return JsonResponse({'error': str(e)}, status=500)
+
